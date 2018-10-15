@@ -18,10 +18,10 @@ class PID(object):
 
     def step(self, error, sample_time):
 
-        integral = self.int_val + error * sample_time;
-        derivative = (error - self.last_error) / sample_time;
+        integral = self.int_val + error * sample_time
+        derivative = (error - self.last_error) / sample_time
 
-        val = self.kp * error + self.ki * integral + self.kd * derivative;
+        val = self.kp * error + self.ki * integral + self.kd * derivative
 
         if val > self.max:
             val = self.max
@@ -32,6 +32,6 @@ class PID(object):
         self.last_error = error
 
         # rospy.logwarn("Throttle: {0}.format(val))
-        # rospy.logwarn("Velocity error: {0}.format(error)) 
+        # rospy.logwarn("Velocity error: {0}.format(error))
 
         return val

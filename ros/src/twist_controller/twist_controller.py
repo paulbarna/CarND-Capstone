@@ -8,9 +8,9 @@ ONE_MPH = 0.44704
 
 
 class Controller(object):
-    def __init__(self, vehicle_mass, fuel_capacity, brake_deadband, decel_limit,
-                 accel_limit, wheel_radius, wheel_base, steer_ratio,
-                 max_lat_accel, max_steer_angle):
+    def __init__(self, vehicle_mass, fuel_capacity, brake_deadband,
+                 decel_limit, accel_limit, wheel_radius, wheel_base,
+                 steer_ratio, max_lat_accel, max_steer_angle):
 
         self.yaw_controller = YawController(wheel_base, steer_ratio, 0.1,
                                             max_lat_accel, max_steer_angle)
@@ -46,7 +46,9 @@ class Controller(object):
         # rospy.logwarn("Current vel: {0}".format(current_vel))
         # rospy.logwarn("Filtered vel: {0}".format(self.vel_lpf.get()))
 
-        steering = self.yaw_controller.get_steering(linear_vel, angular_vel, current_vel)
+        steering = self.yaw_controller.get_steering(linear_vel,
+                                                    angular_vel,
+                                                    current_vel)
 
         vel_error = linear_vel - current_vel
         self.last_vel = current_vel
@@ -60,11 +62,11 @@ class Controller(object):
 
         if linear_vel == 0 and current_vel == 0.1:
             throttle = 0
-            brake = 700     # N*m to hold the car in place if we are stopped at a light
+            brake = 700     # N*m to hold the car in place when at a light
 
         elif throttle < .1 and vel_error < 0:
             throttle = 0
             decel = max(vel_error, self.decel_limit)
-            brake = abs(decel)*self.vehicle_mass*self.wheel_radius # Torque N*m
+            brake = abs(decel)*self.vehicle_mass*self.wheel_radius  # N*m
 
         return throttle, brake, steering
