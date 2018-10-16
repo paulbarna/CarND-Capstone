@@ -1,6 +1,22 @@
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/paulbarna/CarND-Capstone.svg?columns=all)](https://waffle.io/paulbarna/CarND-Capstone)
 
-This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
+## Introduction
+
+This repository contains the results of team [insert name here]'s Capstone project for the Udacity Self-Driving Car Engineer Nanodegree.
+
+The project utilizes Ubuntu Linux 14.04 or 16.04 with Robot Operating System (ROS), the Udacity System Integration Simulator and code written in C++ and Python to provide a System Integration solution to the self-driving car problem.
+
+## Team Members
+
+|     Name    |      Timezone     |     Slack Handle     |
+|-------------|-------------------|------------------|
+| Paul Barna <br> (**Team Lead**) | CET | @paulbarna | 
+| Diogo Pontes | CET | @diogo_pontes |
+| Ashsish Kejriwal | IST | @ak |
+| Xiaoyi Chen | PDT | @xiaoyic |
+| Li Wang | PDT | @lwatech |
+
+## Setup and Installation
 
 Please use **one** of the two installation options, either native **or** docker installation.
 
