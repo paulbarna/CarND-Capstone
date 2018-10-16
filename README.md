@@ -12,7 +12,7 @@ ROS nodes were implemented in order to achieve a core functionality of the auton
 
 The following is a system architecture diagram showing the ROS nodes and topics used in the project.
 
-![ROSdiagram](imgs/ROSiagram.png)
+![ROSdiagram](imgs/ROSdiagram.png)
 
 ## Nodes
 
