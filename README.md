@@ -11,7 +11,7 @@ The project utilizes Ubuntu Linux 14.04 or 16.04 with Robot Operating System (RO
 |     Name    |      Timezone     |     Slack Handle     |
 |-------------|-------------------|------------------|
 | Paul Barna <br> (**Team Lead**) | CET | @paulbarna | 
-| Diogo Pontes | CET | @diogo_pontes |
+| Diogo Pontes | CET | @diogopontes |
 | Ashsish Kejriwal | IST | @ak |
 | Xiaoyi Chen | PDT | @xiaoyic |
 | Li Wang | PDT | @lwatech |
