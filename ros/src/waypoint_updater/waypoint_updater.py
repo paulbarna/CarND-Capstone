@@ -2,6 +2,7 @@
 import numpy as np
 import rospy
 from geometry_msgs.msg import PoseStamped
+from std_msgs.msg import Int32
 from styx_msgs.msg import Lane, Waypoint
 from scipy.spatial import KDTree
 import math
@@ -24,8 +25,8 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 200     # Number of waypoints we will publish
-
+LOOKAHEAD_WPS = 50     # Number of waypoints we will publish
+MAX_DECEL = 0.5
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -33,11 +34,13 @@ class WaypointUpdater(object):
 
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
+        rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
-        # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint
+        # TODO: Add a subscriber for /obstacle_waypoint
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints',
-                                                    Lane, queue_size=1)
+                                                    Lane,
+                                                    queue_size=1)
 
         # TODO: Add other member variables you need below
         self.pose = None
@@ -103,7 +106,7 @@ class WaypointUpdater(object):
             p = Waypoint()
             p.pose = wp.pose
 
-	    # -2 so the front of the car stop at the line, 
+	        # -2 so the front of the car stop at the line, 
             # instead of the center of the car 
             stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
             dist = self.distance(waypoints, i, stop_idx)
@@ -128,9 +131,7 @@ class WaypointUpdater(object):
             self.waypoint_tree = KDTree(self.waypoints_2d)
 
     def traffic_cb(self, msg):
-        # TODO: Callback for /traffic_waypoint message.
         self.stopline_wp_idx = msg.data
-        pass
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message.
