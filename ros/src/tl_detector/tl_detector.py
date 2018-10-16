@@ -122,6 +122,7 @@ class TLDetector(object):
         """
         closest_idx = self.waypoint_tree.query([x, y], 1)[1]
 
+        """
         # Check if closest is ahead or behind the vehicle
         closest_coord = self.waypoints_2d[closest_idx]
         prev_coord = self.waypoints_2d[closest_idx - 1]
@@ -135,7 +136,7 @@ class TLDetector(object):
 
         if val > 0:
             closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
-
+        """
         return closest_idx
 
     def get_light_state(self, light):
@@ -190,7 +191,8 @@ class TLDetector(object):
                     line_wp_idx = temp_wp_idx
 
         rospy.loginfo("current way point is: %d", car_wp_idx)
-        rospy.loginfo("closest lightis : %d", line_wp_idx)
+        rospy.loginfo("closest light is : %d", line_wp_idx)
+
         if closest_light:
             state = self.get_light_state(closest_light)
             return line_wp_idx, state
