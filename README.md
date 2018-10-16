@@ -6,6 +6,22 @@ This repository contains the results of team [insert name here]'s Capstone proje
 
 The project utilizes Ubuntu Linux 14.04 or 16.04 with Robot Operating System (ROS), the Udacity System Integration Simulator and code written in C++ and Python to provide a System Integration solution to the self-driving car problem.
 
+ROS nodes were implemented in order to achieve a core functionality of the autonomous vehicle system, including traffic light detection, control and waypoint following.
+
+## System Architecture
+
+The following is a system architecture diagram showing the ROS nodes and topics used in the project.
+
+[!ROSdiagram](imgs/ROSiagram.png)
+
+## Nodes
+
+### Waypoint Updater
+
+### Drive-by-Wire (DBW)
+
+### Traffic Light Detection
+
 ## Team Members
 
 |     Name    |      Timezone     |     Slack Handle     |
