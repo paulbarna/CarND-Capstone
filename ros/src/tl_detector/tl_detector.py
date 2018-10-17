@@ -13,7 +13,7 @@ import tf
 import cv2
 import yaml
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 2
 
 
 class TLDetector(object):
@@ -61,7 +61,7 @@ class TLDetector(object):
         self.last_wp = -1
         self.state_count = 0
 
-        rospy.spin()
+        self.rospy_spin()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -77,7 +77,7 @@ class TLDetector(object):
 
     def traffic_cb(self, msg):
         self.lights = msg.lights
-
+        
     def image_cb(self, msg):
         """Identifies red lights in the incoming camera image and publishes the
             index of the waypoint closest to the red light's stop line to
@@ -89,25 +89,40 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
-        light_wp, state = self.process_traffic_lights()
 
-        '''
-        Publish upcoming red lights at camera frequency.
-        Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
-        of times till we start using it. Otherwise the previous stable state is
-        used.
-        '''
-        if self.state != state:
-            self.state_count = 0
-            self.state = state
-        elif self.state_count >= STATE_COUNT_THRESHOLD:
-            self.last_state = self.state
-            light_wp = light_wp if state == TrafficLight.RED else -1
-            self.last_wp = light_wp
-            self.upcoming_red_light_pub.publish(Int32(light_wp))
-        else:
-            self.upcoming_red_light_pub.publish(Int32(self.last_wp))
-        self.state_count += 1
+    def rospy_spin(self):
+        """
+        perform task at 5Hz
+        publish upcoming lights only when pose, waypoints and camera images are available 
+        """
+        r = rospy.Rate(5)
+        
+        while not rospy.is_shutdown():
+
+        
+            if self.pose is not None and self.waypoints is not None and self.camera_image is not None:
+                
+                light_wp, state = self.process_traffic_lights()
+        
+                '''
+                Publish upcoming red lights at camera frequency.
+                Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
+                of times till we start using it. Otherwise the previous stable state is
+                used.
+                '''
+                if self.state != state:
+                    self.state_count = 0
+                    self.state = state
+                elif self.state_count >= STATE_COUNT_THRESHOLD:
+                    self.last_state = self.state
+                    light_wp = light_wp if state == TrafficLight.RED else -1
+                    self.last_wp = light_wp
+                    self.upcoming_red_light_pub.publish(Int32(light_wp))
+                else:
+                    self.upcoming_red_light_pub.publish(Int32(self.last_wp))
+                self.state_count += 1
+                
+            r.sleep()
 
     def get_closest_waypoint(self, x, y):
         """Identifies the closest path waypoint to the given position
@@ -190,8 +205,8 @@ class TLDetector(object):
                     closest_light = light
                     line_wp_idx = temp_wp_idx
 
-        rospy.loginfo("current way point is: %d", car_wp_idx)
-        rospy.loginfo("closest light is : %d", line_wp_idx)
+        #rospy.loginfo("current way point is: %d", car_wp_idx)
+        #rospy.loginfo("closest light is : %d", line_wp_idx)
 
         if closest_light:
             state = self.get_light_state(closest_light)
