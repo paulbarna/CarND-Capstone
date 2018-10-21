@@ -205,8 +205,8 @@ class TLDetector(object):
                     closest_light = light
                     line_wp_idx = temp_wp_idx
 
-        #rospy.loginfo("current way point is: %d", car_wp_idx)
-        #rospy.loginfo("closest light is : %d", line_wp_idx)
+        rospy.loginfo("current way point is: %d", car_wp_idx)
+        rospy.loginfo("closest light is : %d", line_wp_idx)
 
         if closest_light:
             state = self.get_light_state(closest_light)
