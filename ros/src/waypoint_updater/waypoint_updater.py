@@ -26,7 +26,7 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
 LOOKAHEAD_WPS = 30     # Number of waypoints we will publish
-MAX_DECEL = 0.5
+MAX_DECEL = 1.5
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -51,7 +51,7 @@ class WaypointUpdater(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(50)
+        rate = rospy.Rate(30)
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
                 # Get closest waypoint
@@ -90,7 +90,10 @@ class WaypointUpdater(object):
 
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
+        now = rospy.Time.now()
+        rospy.loginfo("log wp current time %f", now.to_sec())
         base_waypoints = self.base_waypoints.waypoints[closest_idx:farthest_idx]
+        base_waypoints[0].pose.header.stamp = rospy.Time.now()
         
         if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
             lane.waypoints = base_waypoints
@@ -108,8 +111,11 @@ class WaypointUpdater(object):
             p.pose = wp.pose
 
 	        # -2 so the front of the car stop at the line, 
-            # instead of the center of the car 
+            # instead of the center of the car
+            
             stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
+            # prevent car from moving again after stopping at stop_idx
+            i = min(i, stop_idx)
             dist = self.distance(waypoints, i, stop_idx)
             vel = math.sqrt(2 * MAX_DECEL * dist)
             if vel < 1.:
@@ -117,6 +123,10 @@ class WaypointUpdater(object):
    
             p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x)
             temp.append(p)
+        #rospy.loginfo("old waypoint time: %i %i", waypoints.header.stamp.secs, waypoints.header.stamp.nsecs)
+        #rospy.loginfo("new time: %i %i", temp.header.stamp.secs, temp.header.stamp.nsecs)
+        now = rospy.Time.now()
+        
         return temp
     
     def pose_cb(self, msg):
