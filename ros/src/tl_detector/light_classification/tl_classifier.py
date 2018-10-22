@@ -71,8 +71,8 @@ class TLClassifier(object):
         graph_classes = np.squeeze(graph_classes).astype(np.int32)
 
 
-        # only return classifictions which have a minimum probability distribution of 0.7
-        if graph_scores[0] > .7:
+        # only return classifictions which have a minimum probability distribution of 0.6
+        if graph_scores[0] > .6:
             if graph_classes[0] == 1:
                 print('green light')
                 return TrafficLight.GREEN

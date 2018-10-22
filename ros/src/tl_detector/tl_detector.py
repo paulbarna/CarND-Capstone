@@ -13,7 +13,7 @@ import tf
 import cv2
 import yaml
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 2
 
 
 class TLDetector(object):
@@ -92,10 +92,10 @@ class TLDetector(object):
 
     def rospy_spin(self):
         """
-        perform task at 5Hz
+        perform task at 30Hz
         publish upcoming lights only when pose, waypoints and camera images are available 
         """
-        r = rospy.Rate(10)
+        r = rospy.Rate(20)
         
         while not rospy.is_shutdown():
 
