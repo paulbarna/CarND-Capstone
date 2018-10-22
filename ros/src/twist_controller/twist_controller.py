@@ -38,6 +38,7 @@ class Controller(object):
             self.throttle_controller.reset()
             return 0., 0., 0.
 
+        rospy.loginfo("current v is : %f", current_vel)
         current_vel = self.vel_lpf.filt(current_vel)
 
         # rospy.logwarn("Angular vel: {0}".format(angular_vel))

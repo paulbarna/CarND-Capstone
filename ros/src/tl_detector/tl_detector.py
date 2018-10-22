@@ -124,12 +124,13 @@ class TLDetector(object):
                 
             r.sleep()
 
-    def get_closest_waypoint(self, x, y):
+    def get_closest_waypoint(self, x, y, is_front):
         """Identifies the closest path waypoint to the given position
             https://en.wikipedia.org/wiki/Closest_pair_of_points_problem
         Args:
             x: x coordinate
             y: y coordinate
+            is_front: should the closest waypoint be in front of the query point or not
 
         Returns:
             int: index of the closest waypoint in self.waypoints
@@ -137,7 +138,6 @@ class TLDetector(object):
         """
         closest_idx = self.waypoint_tree.query([x, y], 1)[1]
 
-        """
         # Check if closest is ahead or behind the vehicle
         closest_coord = self.waypoints_2d[closest_idx]
         prev_coord = self.waypoints_2d[closest_idx - 1]
@@ -149,9 +149,11 @@ class TLDetector(object):
 
         val = np.dot(cl_vect-prev_vect, pos_vect-cl_vect)
 
-        if val > 0:
+        if val > 0 and is_front:
             closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
-        """
+        if val < 0 and not is_front:
+            closest_idx = (closest_idx - 1) % len(self.waypoints_2d)
+
         return closest_idx
 
     def get_light_state(self, light):
@@ -191,13 +193,14 @@ class TLDetector(object):
         stop_line_positions = self.config['stop_line_positions']
         if (self.pose):
             car_wp_idx = self.get_closest_waypoint(self.pose.pose.position.x,
-                                                   self.pose.pose.position.y)
+                                                   self.pose.pose.position.y,
+                                                   True)
             # find closest traffic light
             diff = len(self.waypoints.waypoints)
             for i, light in enumerate(self.lights):
                 # get stop line waypoint index
                 line = stop_line_positions[i]
-                temp_wp_idx = self.get_closest_waypoint(line[0], line[1])
+                temp_wp_idx = self.get_closest_waypoint(line[0], line[1], False)
                 # find closest stop line waypoint index
                 d = temp_wp_idx - car_wp_idx
                 if d >= 0 and d < diff:
