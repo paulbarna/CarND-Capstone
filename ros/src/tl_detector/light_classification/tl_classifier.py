@@ -5,6 +5,7 @@ import datetime
 import rospy
 import yaml
 
+
 class TLClassifier(object):
     def __init__(self):
 
@@ -15,21 +16,27 @@ class TLClassifier(object):
         root_path = r'light_classification/model'
         frozen_graph_name = 'frozen_inference_graph.pb'
 
-        # give an indication of what model is used for either  Sim or Site
-        # RCNN model used for on site validation because has better generalization (however it is slow, it takes up to 3s to generate a detection)
-        # SDD model used for sim validation becasue is much faster (the traffic light changes quite often within the sim environment compared to the real data)
-        
+        # give an indication of what model is used for either Sim or Site
+        # RCNN model used for onsite validation due to better generalization
+        # (however it is slow, it takes up to 3s to generate a detection)
+        # SDD model used for sim validation becasue is much faster
+        # (the traffic light changes quite often within the sim environment
+        # compared to the real data)
+
         if self.EnvSelection:
             model_version = 'RCNN_Resnet101_Coco'
-            rospy.loginfo("Site Env classifier is trained with a COCO trained RCNN model : {}/{}".format(
-                model_version, frozen_graph_name))
+            rospy.loginfo("Site Env classifier trained with a COCO trained \
+                           RCNN model : {}/{}".format(model_version,
+                                                      frozen_graph_name))
         else:
             model_version = 'ssd_inception_v2_coco'
-            rospy.loginfo("Sim Env classifier is trained with a COCO trained SSD model : {}/{}".format(
-                model_version, frozen_graph_name))
+            rospy.loginfo("Sim Env classifier trained with a COCO trained \
+                           SSD model : {}/{}".format(model_version,
+                                                     frozen_graph_name))
 
-        frozen_graph_path = root_path + '/' + model_version + '/' + frozen_graph_name
-
+        frozen_graph_path = '/'.join([root_path,
+                                      model_version,
+                                      frozen_graph_name])
 
         self.frozen_graph = tf.Graph()
         with self.frozen_graph.as_default():
@@ -38,12 +45,16 @@ class TLClassifier(object):
                 graph_defintion.ParseFromString(fid.read())
                 tf.import_graph_def(graph_defintion, name='')
 
-
-            self.graph_num_detections = self.frozen_graph.get_tensor_by_name('num_detections:0')
-            self.graph_image_tensor = self.frozen_graph.get_tensor_by_name('image_tensor:0')
-            self.graph_boxes = self.frozen_graph.get_tensor_by_name('detection_boxes:0')
-            self.graph_scores = self.frozen_graph.get_tensor_by_name('detection_scores:0')
-            self.graph_classes = self.frozen_graph.get_tensor_by_name('detection_classes:0')
+            self.graph_num_detections = self.frozen_graph.get_tensor_by_name(
+                                            'num_detections:0')
+            self.graph_image_tensor = self.frozen_graph.get_tensor_by_name(
+                                            'image_tensor:0')
+            self.graph_boxes = self.frozen_graph.get_tensor_by_name(
+                                            'detection_boxes:0')
+            self.graph_scores = self.frozen_graph.get_tensor_by_name(
+                                            'detection_scores:0')
+            self.graph_classes = self.frozen_graph.get_tensor_by_name(
+                                            'detection_classes:0')
 
         self.sess = tf.Session(graph=self.frozen_graph)
 
@@ -54,24 +65,29 @@ class TLClassifier(object):
             image (cv::Mat): image containing the traffic light
 
         Returns:
-            int: ID of traffic light color (specified in styx_msgs/TrafficLight)
+            int: traffic light color ID (specified in styx_msgs/TrafficLight)
 
         """
         with self.frozen_graph.as_default():
-            
+
             img_np = np.expand_dims(image, axis=0)
 
-            (graph_boxes, graph_scores, graph_classes, graph_num_detections) = self.sess.run(
-                [self.graph_boxes, self.graph_scores, self.graph_classes, self.graph_num_detections],
-                feed_dict={self.graph_image_tensor: img_np})
- 
+            (graph_boxes,
+             graph_scores,
+             graph_classes,
+             graph_num_detections) = self.sess.run([self.graph_boxes,
+                                                    self.graph_scores,
+                                                    self.graph_classes,
+                                                    self.graph_num_detections],
+                                         feed_dict={self.graph_image_tensor:
+                                                        img_np})
 
         graph_boxes = np.squeeze(graph_boxes)
         graph_scores = np.squeeze(graph_scores)
         graph_classes = np.squeeze(graph_classes).astype(np.int32)
 
-
-        # only return classifictions which have a minimum probability distribution of 0.6
+        # only return classifictions which have a
+        # minimum probability distribution of 0.6
         if graph_scores[0] > .6:
             if graph_classes[0] == 1:
                 print('green light')
