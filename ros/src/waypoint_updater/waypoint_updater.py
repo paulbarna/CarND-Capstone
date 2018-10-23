@@ -28,6 +28,7 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 LOOKAHEAD_WPS = 100     # Number of waypoints we will publish
 MAX_DECEL = 1.5
 
+
 class WaypointUpdater(object):
     def __init__(self):
         rospy.init_node('waypoint_updater')
@@ -40,10 +41,9 @@ class WaypointUpdater(object):
         # TODO: Add a subscriber for /obstacle_waypoint
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints',
-                                                    Lane,
-                                                    queue_size=1)
+                                                   Lane,
+                                                   queue_size=1)
 
-        # TODO: Add other member variables you need below
         self.pose = None
         self.base_waypoints = None
         self.waypoints_2d = None
@@ -97,14 +97,15 @@ class WaypointUpdater(object):
         rospy.loginfo("log wp current time %f", now.to_sec())
         base_waypoints = self.base_waypoints.waypoints[closest_idx:farthest_idx]
         base_waypoints[0].pose.header.stamp = rospy.Time.now()
-        
+
         if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
             lane.waypoints = base_waypoints
         else:
-            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+            lane.waypoints = self.decelerate_waypoints(base_waypoints,
+                                                       closest_idx)
 
         return lane
- 
+
     def decelerate_waypoints(self, waypoints, closest_idx):
         # Don't modify base waypoints.
         temp = []
@@ -113,32 +114,40 @@ class WaypointUpdater(object):
             p = Waypoint()
             p.pose = wp.pose
 
-	    # -2 so the front of the car stop at the line, 
+            # -2 so the front of the car stop at the line,
             # instead of the center of the car
-            
             stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
+
             # prevent car from moving again after stopping at stop_idx
             i = min(i, stop_idx)
-	    # if distance is less than 30 waypoints, set the traget velocity proportioanlly to the gLong rate
+
+            # if distance is less than 30 waypoints, set the traget velocity
+            # proportionally to the gLong rate
             dist = self.distance(waypoints, i, stop_idx)
             if dist < 30:
-                if self.gLong_rate == None:
+                if self.gLong_rate is None:
                     self.gLong_rate = self.vLong / dist
-                vel = math.sqrt(2 * MAX_DECEL* self.gLong_rate * dist)
+                vel = math.sqrt(2 * MAX_DECEL * self.gLong_rate * dist)
                 if vel < 1.:
                     vel = 0.
-                vel=min(vel, wp.twist.twist.linear.x)
+                vel = min(vel, wp.twist.twist.linear.x)
             else:
                 vel = wp.twist.twist.linear.x
-   
+
             p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x)
             temp.append(p)
-        #rospy.loginfo("old waypoint time: %i %i", waypoints.header.stamp.secs, waypoints.header.stamp.nsecs)
-        #rospy.loginfo("new time: %i %i", temp.header.stamp.secs, temp.header.stamp.nsecs)
+        """
+        rospy.loginfo("old waypoint time: %i %i",
+                        waypoints.header.stamp.secs,
+                        waypoints.header.stamp.nsecs)
+        rospy.loginfo("new time: %i %i",
+                        temp.header.stamp.secs,
+                        temp.header.stamp.nsecs)
+        """
         now = rospy.Time.now()
-        
+
         return temp
-    
+
     def pose_cb(self, msg):
         self.pose = msg
 
@@ -150,8 +159,8 @@ class WaypointUpdater(object):
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x,
                                   waypoint.pose.pose.position.y
-                                 ]
-                                for waypoint in waypoints.waypoints]
+                                  ]
+                                 for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
 
     def traffic_cb(self, msg):

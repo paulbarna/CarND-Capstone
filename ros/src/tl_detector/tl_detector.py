@@ -77,7 +77,7 @@ class TLDetector(object):
 
     def traffic_cb(self, msg):
         self.lights = msg.lights
-        
+
     def image_cb(self, msg):
         """Identifies red lights in the incoming camera image and publishes the
             index of the waypoint closest to the red light's stop line to
@@ -93,22 +93,25 @@ class TLDetector(object):
     def rospy_spin(self):
         """
         perform task at 30Hz
-        publish upcoming lights only when pose, waypoints and camera images are available 
+        publish upcoming lights only when pose,
+        waypoints and camera images are available
         """
+
         r = rospy.Rate(10)
         
         while not rospy.is_shutdown():
 
-        
-            if self.pose is not None and self.waypoints is not None and self.camera_image is not None:
-                
+            if self.pose is not None and \
+              self.waypoints is not None and \
+              self.camera_image is not None:
+
                 light_wp, state = self.process_traffic_lights()
-        
+
                 '''
                 Publish upcoming red lights at camera frequency.
-                Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
-                of times till we start using it. Otherwise the previous stable state is
-                used.
+                Each predicted state has to occur `STATE_COUNT_THRESHOLD`
+                number of times till we start using it. Otherwise the previous
+                stable state is used.
                 '''
                 if self.state != state:
                     self.state_count = 0
@@ -121,7 +124,7 @@ class TLDetector(object):
                 else:
                     self.upcoming_red_light_pub.publish(Int32(self.last_wp))
                 self.state_count += 1
-                
+
             r.sleep()
 
     def get_closest_waypoint(self, x, y, is_front):
@@ -130,7 +133,8 @@ class TLDetector(object):
         Args:
             x: x coordinate
             y: y coordinate
-            is_front: should the closest waypoint be in front of the query point or not
+            is_front: should the closest waypoint be in front
+                      of the query point or not
 
         Returns:
             int: index of the closest waypoint in self.waypoints
@@ -200,7 +204,9 @@ class TLDetector(object):
             for i, light in enumerate(self.lights):
                 # get stop line waypoint index
                 line = stop_line_positions[i]
-                temp_wp_idx = self.get_closest_waypoint(line[0], line[1], False)
+                temp_wp_idx = self.get_closest_waypoint(line[0],
+                                                        line[1],
+                                                        False)
                 # find closest stop line waypoint index
                 d = temp_wp_idx - car_wp_idx
                 if d >= 0 and d < diff:
@@ -208,8 +214,8 @@ class TLDetector(object):
                     closest_light = light
                     line_wp_idx = temp_wp_idx
 
-        #rospy.loginfo("current way point is: %d", car_wp_idx)
-        #rospy.loginfo("closest light is : %d", line_wp_idx)
+        # rospy.loginfo("current way point is: %d", car_wp_idx)
+        # rospy.loginfo("closest light is : %d", line_wp_idx)
 
         if closest_light:
             state = self.get_light_state(closest_light)
