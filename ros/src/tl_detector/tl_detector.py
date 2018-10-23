@@ -95,7 +95,7 @@ class TLDetector(object):
         perform task at 30Hz
         publish upcoming lights only when pose, waypoints and camera images are available 
         """
-        r = rospy.Rate(20)
+        r = rospy.Rate(10)
         
         while not rospy.is_shutdown():
 
