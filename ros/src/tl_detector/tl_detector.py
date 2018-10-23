@@ -96,8 +96,9 @@ class TLDetector(object):
         publish upcoming lights only when pose,
         waypoints and camera images are available
         """
-        r = rospy.Rate(20)
 
+        r = rospy.Rate(10)
+        
         while not rospy.is_shutdown():
 
             if self.pose is not None and \
