@@ -11,12 +11,15 @@ ROS nodes were implemented in order to achieve a core functionality of the auton
 ## System Architecture
 
 The following is a system architecture diagram showing the ROS nodes and topics used in the project.
-
 ![ROSdiagram](imgs/ROSdiagram.png)
-
 ## Nodes
 
 ### Waypoint Updater
+
+![Waypoint Updater](imgs/waypoint_updater-ros-graph.png)
+The purpose of this node is to publish a fixed number of waypoints ahead of the vehicle with the correct target velocities, depending on traffic lights and obstacles. It subscribes to the topics `/base_waypoints`, `/current_pose`, `/current_velocity` and `/traffic_waypoint` in order to publish a list of waypoints to `/final_waypoints`.
+
+
 
 ### Drive-by-Wire (DBW)
 
