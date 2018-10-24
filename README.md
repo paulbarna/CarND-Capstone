@@ -20,7 +20,6 @@ The following is a system architecture diagram showing the ROS nodes and topics 
 The purpose of this node is to publish a fixed number of waypoints ahead of the vehicle with the correct target velocities, depending on traffic lights and obstacles. It subscribes to the topics `/base_waypoints`, `/current_pose`, `/current_velocity` and `/traffic_waypoint` in order to publish a list of waypoints to `/final_waypoints`.
 
 
-
 ### Drive-by-Wire (DBW)
 
 ### Traffic Light Detection
