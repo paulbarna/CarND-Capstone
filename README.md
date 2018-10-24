@@ -18,15 +18,14 @@ The following is a system architecture diagram showing the ROS nodes and topics 
 
 ![Waypoint Updater](imgs/waypoint-updater-ros-graph.png)
 
-The purpose of this node is to publish a fixed number of waypoints ahead of the vehicle with the correct target velocities, depending on traffic lights and obstacles. It subscribes to the following topics:
+The purpose of this node is to publish a fixed number of waypoints ahead of the vehicle. It subscribes to the following topics:
 
 * `/base_waypoints` - Publishes a list of all waypoints for the track, which includes waypoints ahead and behind the vehicle. Only published once
 * `/current_pose` - Publishes the current position of the car
 * `/current_velocity` - Publishes the current velocity of the car
 * `/traffic_waypoint` - Traffic light data, position and status
 
-in order to publish a list of waypoints to `/final_waypoints`.
-
+in order to publish a list of waypoints to `/final_waypoints`. This [Publisher](http://wiki.ros.org/roscpp/Overview/Publishers%20and%20Subscribers) includes a list of a fix number of waypoints currently ahead of the vehicle with the correct target velocities, depending on traffic lights.
 
 ### Drive-by-Wire (DBW)
 
