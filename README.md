@@ -29,6 +29,14 @@ in order to publish a list of waypoints to `/final_waypoints`. This [Publisher](
 
 ### Drive-by-Wire (DBW)
 
+![DBW Node](imgs/dbw-node-ros-graph.png)
+
+With the messages being published to `/final_waypoints`, the vehicle's waypoint follower will publish twist commands to the `twist_cmd` topic and use various controllers to provide appropriate throttle, brake and steering commands. These commands can then be published to the following topics:
+
+* `/vehicle/throttle_cmd`
+* `/vehicle/brake_cmd`
+* `/vehicle/steering_cmd`
+
 ### Traffic Light Detection
 
 ## Team Members
