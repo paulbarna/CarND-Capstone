@@ -25,17 +25,21 @@ The purpose of this node is to publish a fixed number of waypoints ahead of the 
 * `/current_velocity` - Publishes the current velocity of the car
 * `/traffic_waypoint` - Traffic light data, position and status
 
-in order to publish a list of waypoints to `/final_waypoints`. This [Publisher](http://wiki.ros.org/roscpp/Overview/Publishers%20and%20Subscribers) includes a list of a fix number of waypoints currently ahead of the vehicle with the correct target velocities, depending on traffic lights.
+The node will then [publish](http://wiki.ros.org/roscpp/Overview/Publishers%20and%20Subscribers) to the following topic:
+
+* `final_waypoints` - list with a fixed number of waypoints currently ahead of the vehicle with the correct target velocities, depending on traffic lights.
 
 ### Drive-by-Wire (DBW)
 
 ![DBW Node](imgs/dbw-node-ros-graph.png)
 
-With the messages being published to `/final_waypoints`, the vehicle's waypoint follower will publish twist commands to the `twist_cmd` topic and use various controllers to provide appropriate throttle, brake and steering commands. These commands can then be published to the following topics:
+With the messages being published to `/final_waypoints`, the vehicle's waypoint follower will publish**twist commands** to the `twist_cmd` topic and provide appropriate throttle, brake and steering commands. These commands can then be published to the following topics:
 
 * `/vehicle/throttle_cmd`
 * `/vehicle/brake_cmd`
 * `/vehicle/steering_cmd`
+
+This node will also subscribe to the `/vehicle/dbw_enabled` topic, which contains the current DBW status, i.e., *Manual* or *Autonomous*. This is in place for situations where the safety driver takes over, and *Autonomous Mode* is disengaged. 
 
 ### Traffic Light Detection
 
