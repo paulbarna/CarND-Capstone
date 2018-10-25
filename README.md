@@ -11,14 +11,35 @@ ROS nodes were implemented in order to achieve a core functionality of the auton
 ## System Architecture
 
 The following is a system architecture diagram showing the ROS nodes and topics used in the project.
-
 ![ROSdiagram](imgs/ROSdiagram.png)
-
 ## Nodes
 
 ### Waypoint Updater
 
+![Waypoint Updater](imgs/waypoint-updater-ros-graph.png)
+
+The purpose of this node is to publish a fixed number of waypoints ahead of the vehicle. It subscribes to the following topics:
+
+* `/base_waypoints` - Publishes a list of all waypoints for the track, which includes waypoints ahead and behind the vehicle. Only published once
+* `/current_pose` - Publishes the current position of the car
+* `/current_velocity` - Publishes the current velocity of the car
+* `/traffic_waypoint` - Traffic light data, position and status
+
+The node will then [publish](http://wiki.ros.org/roscpp/Overview/Publishers%20and%20Subscribers) to the following topic:
+
+* `final_waypoints` - list with a fixed number of waypoints currently ahead of the vehicle with the correct target velocities, depending on traffic lights.
+
 ### Drive-by-Wire (DBW)
+
+![DBW Node](imgs/dbw-node-ros-graph.png)
+
+With the messages being published to `/final_waypoints`, the vehicle's waypoint follower will publish**twist commands** to the `twist_cmd` topic and provide appropriate throttle, brake and steering commands. These commands can then be published to the following topics:
+
+* `/vehicle/throttle_cmd`
+* `/vehicle/brake_cmd`
+* `/vehicle/steering_cmd`
+
+This node will also subscribe to the `/vehicle/dbw_enabled` topic, which contains the current DBW status, i.e., *Manual* or *Autonomous*. This is in place for situations where the safety driver takes over, and *Autonomous Mode* is disengaged. 
 
 ### Traffic Light Detection
 
