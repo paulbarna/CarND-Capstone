@@ -65,7 +65,7 @@ Please note [Vatsal's dataset](https://github.com/coldKnight/TrafficLight_Detect
 | Diogo Pontes | CET | @diogopontes | dpontes11@gmail.com |
 | Ashsish Kejriwal | IST | @ak | ashishkej@gmail.com |
 | Xiaoyi Chen | PDT | @xiaoyic | xiaoyic@live.com |
-| Li Wang | PDT | @lwatech | wangliinhust@gmail.com |
+| Li Wang | PDT | @lwgatech | liwang@gatech.edu |
 
 ## Setup and Installation
 
