@@ -45,13 +45,13 @@ This node will also subscribe to the `/vehicle/dbw_enabled` topic, which contain
 
 ## Team Members
 
-|     Name    |      Timezone     |     Slack Handle     |
-|-------------|-------------------|------------------|
-| Paul Barna <br> (**Team Lead**) | CET | @paulbarna | 
-| Diogo Pontes | CET | @diogopontes |
-| Ashsish Kejriwal | IST | @ak |
-| Xiaoyi Chen | PDT | @xiaoyic |
-| Li Wang | PDT | @lwatech |
+|     Name    |      Timezone     |     Slack Handle     |  Email   |
+|-------------|-------------------|------------------|--------------|
+| Paul Barna <br> (**Team Lead**) | CET | @paulbarna | paul-otniel.barna@mclaren.com |
+| Diogo Pontes | CET | @diogopontes | dpontes11@gmail.com |
+| Ashsish Kejriwal | IST | @ak | ashishkej@gmail.com |
+| Xiaoyi Chen | PDT | @xiaoyic | xiaoyic@live.com |
+| Li Wang | PDT | @lwatech | wangliinhust@gmail.com |
 
 ## Setup and Installation
 
