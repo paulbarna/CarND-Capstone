@@ -45,8 +45,17 @@ This node will also subscribe to the `/vehicle/dbw_enabled` topic, which contain
 
 For the classifier a hybrid approach was followed by having two models with two separate graphs available within the final submission, one for the sim and a second one for the site run. An [SSD Inception V2 Coco](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2017_11_17.tar.gz) was trained using data captured and labeled from the Unity simulator and an [RCNN Inception V2 Coco](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz) model trained on the real-world data, the ROSbag file recorded on the Udacity self-driving car.
 The SSD model proved to be fast enough to cope with a significantly higher rate of change for the traffic lights throughout the simulator lap, however it wasn't good enough to generalize on new data. The RCNN inference is significantly slower (up to 3s) but very precise, with good results on real data.
-The ROSbag file used for training the SSD model is a collection of simulator captured images, labelled with [labelImg](https://tzutalin.github.io/labelImg/). A TFRecord file was further generated alongside a pbtxt file with Red, Green, Yellow and Off labels, both used for completing the transfer learning of the Coco-trained models. The training was done using an AWS EC2 instance over 10000 steps for both models.
+
+The ROSbag file used for training the SSD model is a collection of simulator captured images, labelled with [labelImg](https://tzutalin.github.io/labelImg/). A TFRecord file was further generated alongside a pbtxt file with Red, Green, Yellow and Off labels, both used for completing the transfer learning of the Coco-trained models.
+
+![Traffic Light Labeling](imgs/Labeling_2018-10-26_11-40-16.png)
+
+The training was done using an AWS EC2 instance over 10000 steps for both models.
+
+![AWS Training](imgs/AWS.png)
+
 Please note [Vatsal's dataset](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI#get-the-dataset) was used as well for both evaluation and training to supplement the existing datasets.
+
 
 ## Team Members
 
