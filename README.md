@@ -1,3 +1,4 @@
+![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/paulbarna/CarND-Capstone.svg?columns=all)](https://waffle.io/paulbarna/CarND-Capstone)
 
 ## Introduction
